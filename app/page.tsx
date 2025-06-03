@@ -13,8 +13,10 @@ export default function Home() {
 						<Link href="/login">
 							<Button variant="outline">Entrar</Button>
 						</Link>
-						<Link href="/register" className="text-secondary">
-							<Button>Cadastrar</Button>
+						<Link href="/register">
+							<Button variant="default" className="text-secondary">
+								Cadastrar
+							</Button>
 						</Link>
 					</div>
 				</div>
