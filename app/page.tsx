@@ -11,12 +11,7 @@ export default function Home() {
 					</div>
 					<div className="flex items-center gap-4">
 						<Link href="/login">
-							<Button
-								variant="outline"
-								className="hover:text-text-dark hover:border-text-dark"
-							>
-								Entrar
-							</Button>
+							<Button variant="outline">Entrar</Button>
 						</Link>
 						<Link href="/register" className="text-secondary">
 							<Button>Cadastrar</Button>
