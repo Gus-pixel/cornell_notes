@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "@/components/ui/input";
 import Logo from "@/components/Logo";
+import { login } from "@/lib/auth";
 
 export default function LoginPage() {
 	return (
@@ -23,10 +24,7 @@ export default function LoginPage() {
 						</div>
 
 						<div className="mt-6">
-							<form
-								// action={}
-								className="space-y-4"
-							>
+							<form action={login} className="space-y-4">
 								<div className="space-y-2">
 									<Label htmlFor="email" className="text-text-dark">
 										Email

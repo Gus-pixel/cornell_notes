@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "@/components/ui/input";
 import Logo from "@/components/Logo";
+import { register } from "@/lib/auth";
 
 export default function RegisterPage() {
 	return (
@@ -23,10 +24,7 @@ export default function RegisterPage() {
 						</div>
 
 						<div className="mt-6">
-							<form
-								// action={}
-								className="space-y-4"
-							>
+							<form action={register} className="space-y-4">
 								<div className="space-y-2">
 									<Label htmlFor="nome" className="text-text-dark">
 										Nome
