@@ -22,7 +22,7 @@ const config = {
 		extend: {
 			colors: {
 				// Cores personalizadas do projeto
-				primary: "#4A90E2", // Azul
+				primary: "#FF5E00", // Azul
 				secondary: "#F5F7FA", // Cinza-claro
 				"text-dark": "#333333", // Cinza-escuro
 

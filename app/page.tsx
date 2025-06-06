@@ -7,7 +7,7 @@ export default function Home() {
 			<header className="sticky top-0 z-10 border-b bg-background/10 backdrop-blur">
 				<div className="container px-6 md:px-10 flex h-16 items-center justify-between backdrop-blur">
 					<div className="text-2xl font-bold text-text-dark">
-						📘 Cornell Notes
+						📔 Cornell Notes
 					</div>
 					<div className="flex items-center gap-4">
 						<Link href="/login">
@@ -37,7 +37,8 @@ export default function Home() {
 								<Link href="/register">
 									<Button
 										size="lg"
-										className="w-full min-[400px]:w-auto bg-primary hover:bg-primary/80 text-secondary"
+										variant="default"
+										className="w-full min-[400px]:w-auto text-secondary"
 									>
 										Começar Gratuitamente
 									</Button>
