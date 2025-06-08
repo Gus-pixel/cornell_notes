@@ -1,9 +1,9 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Label } from "@radix-ui/react-label";
-import { Input } from "@/components/ui/input";
-import Logo from "@/components/Logo";
-import { login } from "@/lib/auth";
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Label } from '@radix-ui/react-label';
+import { Input } from '@/components/ui/input';
+import Logo from '@/components/Logo';
+import { login } from '@/lib/auth';
 
 export default function LoginPage() {
 	return (
@@ -60,7 +60,7 @@ export default function LoginPage() {
 							</form>
 
 							<div className="mt-6 text-center text-sm">
-								Não tem uma conta?{" "}
+								Não tem uma conta?{' '}
 								<Link
 									href="/register"
 									className="font-medium text-primary hover:underline"
