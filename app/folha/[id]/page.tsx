@@ -42,6 +42,11 @@ export default function FolhaPage({ params }: { params: { id: string } }) {
 
 		const fetchData = async () => {
 			try {
+				// Buscar informações do usuário
+				// const userResponse = await fetch('/api/user');
+				// const userData = await userResponse.json();
+				// setUser(userData);
+
 				//TODO : Simular carregamento de usuário
 				await new Promise((resolve) => setTimeout(resolve, 1000)); // Simula atraso de 1 segundo
 				setUser({
@@ -53,6 +58,14 @@ export default function FolhaPage({ params }: { params: { id: string } }) {
 					updatedAt: new Date().toISOString(),
 				} as UserData);
 
+				// Buscar folha específica
+				// const folhaResponse = await fetch(`/api/folhas/${params.id}`);
+				// if (!folhaResponse.ok) {
+				// 	const errorData = await folhaResponse.json();
+				// 	throw new Error(errorData.error || 'Folha não encontrada');
+				// }
+				// const folhaData = await folhaResponse.json();
+				// setFolha(folhaData);
 				//TODO : Simular carregamento de folha
 				await new Promise((resolve) => setTimeout(resolve, 1000)); // Simula atraso de 1 segundo
 				setFolha({
@@ -67,11 +80,11 @@ export default function FolhaPage({ params }: { params: { id: string } }) {
 						'Anotação 2: Teorema de Pitágoras',
 					],
 					cores_personalizadas: {
-						fundo_cor: '#00b894',
+						fundo_cor: '#00b89470',
 						materia_cor: '#2c3e50',
 						titulo_cor: '#141e',
 						palavras_chave_cor: '#6c5ce7',
-						anotacoes_cor: '#f9f7f3',
+						anotacoes_cor: '#00b894',
 						resumo_cor: '#fdcb6e',
 					},
 				} as FolhaCornell);
@@ -175,7 +188,7 @@ export default function FolhaPage({ params }: { params: { id: string } }) {
 									: undefined,
 						}}
 					>
-						Matéria
+						{folha.materia}
 					</div>
 					<CardTitle
 						style={{
