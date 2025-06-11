@@ -5,24 +5,17 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DashboardHeader } from '@/components/dashboard-header';
-import type { FolhaCornell, User } from '@/lib/mock-db';
+import type { FolhaCornell } from '@/lib/mock-db';
 import { PlusIcon, SearchIcon, LockIcon } from 'lucide-react';
 import Loading from '@/components/Loading';
+import { useAuth } from '../context/AuthContext';
 
 export default function DashboardPage() {
 	const [folhas, setFolhas] = useState<FolhaCornell[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [searchQuery, setSearchQuery] = useState('');
 	const [isSearching, setIsSearching] = useState(false);
-
-	//TODO Mock usuário, remover quando for integrado com autenticação real
-	const user: User = {
-		id: '1',
-		nome: 'João Silva',
-		email: 'joaozinho@gmail.com',
-		senha: 'senha123',
-		tipo: 'premium', // Pode ser 'gratuito' ou 'premium'
-	};
+	const { user } = useAuth();
 
 	useEffect(() => {
 		setTimeout(() => {
