@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import { UserData } from '@/app/types/User';
-import { getCookie, setCookie, deleteCookie } from 'cookies-next';
 import { redirect } from 'next/navigation';
 
 type AuthContextType = {
@@ -22,14 +21,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
 			if (storedUser) {
 				try {
-					// const parsedUser =getCookie('user');
 					const parsedUser = JSON.parse(storedUser as string);
 					setUser(parsedUser);
 				} catch (e) {
 					console.error('Erro ao parsear cookie:', e);
 				}
-			} else {
-				redirect('/login');
 			}
 		}
 		fetchUser();
@@ -37,7 +33,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
 	const logout = () => {
 		localStorage.removeItem('user');
-		// deleteCookie('user');
 		setUser(null);
 		redirect('/login');
 	};
