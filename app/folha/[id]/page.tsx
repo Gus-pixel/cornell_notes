@@ -11,7 +11,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
-import type { FolhaCornell, UserData } from '@/lib/mock-db';
+import type { FolhaCornell } from '@/lib/mock-db';
 import { ArrowLeftIcon, EditIcon, TrashIcon } from 'lucide-react';
 import {
 	AlertDialog,
@@ -24,6 +24,7 @@ import {
 	AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import Loading from '@/components/Loading';
+import { UserData } from '@/app/types/User';
 
 export default function FolhaPage({ params }: { params: { id: string } }) {
 	const router = useRouter();
