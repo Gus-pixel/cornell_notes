@@ -3,45 +3,83 @@
 import { redirect } from 'next/navigation';
 import { request } from './api';
 import { UserData } from '@/app/types/User';
-import { useAuth } from '@/app/context/AuthContext';
 import { cookies } from 'next/headers';
+import { FormState } from '@/app/types/FormState';
 
-export async function register(formData: FormData) {
+interface RegisterResponse {
+	user: UserData;
+}
+
+interface RegisterFormState extends FormState {
+	nome?: string;
+	email?: string;
+	user?: UserData;
+}
+
+interface LoginFormState extends FormState {
+	email?: string;
+	user?: UserData;
+}
+
+export async function register(
+	prevState: FormState | null,
+	formData: FormData
+): Promise<RegisterFormState> {
 	const nome = formData.get('nome')?.toString().trim();
 	const email = formData.get('email')?.toString().trim();
 	const senha = formData.get('senha')?.toString();
 	const confirmSenha = formData.get('confirmSenha')?.toString();
 
+	const fields = {
+		nome: nome || '',
+		email: email || '',
+	};
+
 	if (!nome || !email || !senha || !confirmSenha) {
-		throw new Error('Todos os campos são obrigatórios.');
+		return { ...fields, error: 'Todos os campos são obrigatórios.' };
 	}
 
 	if (senha !== confirmSenha) {
-		throw new Error('As senhas não coincidem.');
+		return { ...fields, error: 'As senhas não coincidem.' };
 	}
 
 	if (senha.length < 6) {
-		throw new Error('A senha deve ter pelo menos 6 caracteres.');
+		return { ...fields, error: 'A senha deve ter pelo menos 6 caracteres.' };
 	}
 
 	try {
-		await request({
+		const response = await request<
+			{ nome: string; email: string; senha: string },
+			RegisterResponse
+		>({
 			method: 'POST',
 			endpoint: '/user',
 			body: { nome, email, senha },
 		});
+
+		return { success: true, user: response.user };
 	} catch (err: any) {
 		console.error('Erro no registro:', err.message);
-		throw err;
+		return {
+			...fields,
+			error: err.message || 'Erro ao registrar usuário.',
+		};
 	}
 }
 
-export async function login(formData: FormData) {
+export async function login(
+	prevState: FormState | null,
+	formData: FormData
+): Promise<LoginFormState> {
 	const email = formData.get('email')?.toString().trim();
 	const senha = formData.get('senha')?.toString();
 
+	const fields = {
+		email: email || '',
+	};
+
 	if (!email || !senha) {
-		throw new Error('Todos os campos são obrigatórios.');
+		return { ...fields, error: 'Todos os campos são obrigatórios.' };
 	}
 
 	try {
@@ -54,13 +92,10 @@ export async function login(formData: FormData) {
 			body: { email, senha },
 		});
 
-		const cookieStore = await cookies();
-		cookieStore.set('user', JSON.stringify(response.user), {
-			path: '/',
-		});
+		return { success: true, user: response.user };
 	} catch (err: any) {
 		console.error('Erro no login:', err.message);
 
-		throw new Error(err.message || 'Erro ao fazer login.');
+		return { ...fields, error: err.message || 'Email ou senha incorretos.' };
 	}
 }

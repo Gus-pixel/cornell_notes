@@ -9,6 +9,7 @@ import type { FolhaCornell } from '@/lib/mock-db';
 import { PlusIcon, SearchIcon, LockIcon } from 'lucide-react';
 import Loading from '@/components/Loading';
 import { useAuth } from '../context/AuthContext';
+import { UserData } from '../types/User';
 
 export default function DashboardPage() {
 	const [folhas, setFolhas] = useState<FolhaCornell[]>([]);
@@ -106,12 +107,12 @@ export default function DashboardPage() {
 		);
 	}
 
-	const isPremium = user.tipo === 'premium';
+	const isPremium = user?.tipo === 'premium';
 	const reachedLimit = !isPremium && folhas.length >= 3;
 
 	return (
 		<div className='flex min-h-screen flex-col'>
-			<DashboardHeader user={user} onSearch={handleSearch} />
+			<DashboardHeader user={user as UserData} onSearch={handleSearch} />
 
 			<main className='flex-1 p-6'>
 				<div className='container'>

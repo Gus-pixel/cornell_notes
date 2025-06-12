@@ -8,6 +8,7 @@ import { redirect } from 'next/navigation';
 type AuthContextType = {
 	user: UserData | null;
 	logout: () => void;
+	setUser: (user: UserData | null) => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -16,25 +17,33 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 	const [user, setUser] = useState<UserData | null>(null);
 
 	useEffect(() => {
-		const storedUser = getCookie('user');
+		async function fetchUser() {
+			const storedUser = localStorage.getItem('user');
 
-		if (storedUser) {
-			try {
-				const parsed = JSON.parse(storedUser as string);
-				setUser(parsed);
-			} catch (e) {
-				console.error('Erro ao parsear cookie:', e);
+			if (storedUser) {
+				try {
+					// const parsedUser =getCookie('user');
+					const parsedUser = JSON.parse(storedUser as string);
+					setUser(parsedUser);
+				} catch (e) {
+					console.error('Erro ao parsear cookie:', e);
+				}
+			} else {
+				redirect('/login');
 			}
 		}
+		fetchUser();
 	}, []);
 
 	const logout = () => {
-		deleteCookie('user');
+		localStorage.removeItem('user');
+		// deleteCookie('user');
 		setUser(null);
+		redirect('/login');
 	};
 
 	return (
-		<AuthContext.Provider value={{ user, logout }}>
+		<AuthContext.Provider value={{ user, logout, setUser }}>
 			{children}
 		</AuthContext.Provider>
 	);
