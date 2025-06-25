@@ -2,7 +2,7 @@
 
 import type React from 'react';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useActionState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -16,18 +16,23 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
-import type { UserData } from '@/lib/mock-db';
 import { PlusIcon, XIcon } from 'lucide-react';
 import Loading from '@/components/Loading';
+import { useAuth } from '@/app/context/AuthContext';
+import { createFolha } from '@/lib/api/folha';
 
 export default function NovaFolhaPage() {
 	const router = useRouter();
-	const [user, setUser] = useState<UserData | null>(null);
-	const [isLoading, setIsLoading] = useState(true);
+	const { user } = useAuth();
+	const [isLoading, setIsLoading] = useState(false);
 	const [palavrasChave, setPalavrasChave] = useState<string[]>(['']);
 	const [anotacoesRelevantes, setAnotacoesRelevantes] = useState<string[]>([
 		'',
 	]);
+	const [state, formAction, isPending] = useActionState(createFolha, {
+		folhaId: '',
+		error: null,
+	});
 	const [error, setError] = useState<string | null>(null);
 
 	// Cores para usuários premium
@@ -37,38 +42,6 @@ export default function NovaFolhaPage() {
 	const [anotacoesColor, setAnotacoesColor] = useState('#000000');
 	const [resumoColor, setResumoColor] = useState('#000000');
 	const [fundoColor, setFundoColor] = useState('#ffffff');
-
-	useEffect(() => {
-		const fetchUser = async () => {
-			try {
-				// const response = await fetch('/api/user');
-				// if (!response.ok) {
-				// 	throw new Error('Falha ao carregar informações do usuário');
-				// }
-				// const userData = await response.json();
-				// setUser(userData);
-				//TODO : Simular carregamento de usuário
-				await new Promise((resolve) => setTimeout(resolve, 1000)); // Simula atraso de 1 segundo
-				setUser({
-					id: '1',
-					nome: 'João Silva',
-					email: 'jaoao@silve.ocom',
-					tipo: 'premium', // ou 'gratuito'
-					createdAt: new Date().toISOString(),
-					updatedAt: new Date().toISOString(),
-				} as UserData);
-			} catch (error) {
-				console.error('Erro ao carregar usuário:', error);
-				setError(
-					error instanceof Error ? error.message : 'Erro ao carregar usuário'
-				);
-			} finally {
-				setIsLoading(false);
-			}
-		};
-
-		fetchUser();
-	}, []);
 
 	const handleAddPalavraChave = () => {
 		setPalavrasChave([...palavrasChave, '']);
@@ -100,46 +73,6 @@ export default function NovaFolhaPage() {
 		const newAnotacoes = [...anotacoesRelevantes];
 		newAnotacoes[index] = value;
 		setAnotacoesRelevantes(newAnotacoes);
-	};
-
-	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-
-		const formData = new FormData(e.currentTarget);
-
-		// Adicionar palavras-chave e anotações ao formData
-		formData.set('palavras_chave', palavrasChave.filter(Boolean).join(','));
-		formData.set(
-			'anotacoes_relevantes',
-			anotacoesRelevantes.filter(Boolean).join(',')
-		);
-
-		// Adicionar cores para usuários premium
-		if (user?.tipo === 'premium') {
-			formData.set('materia_cor', materiaColor);
-			formData.set('titulo_cor', tituloColor);
-			formData.set('palavras_chave_cor', palavrasChaveColor);
-			formData.set('anotacoes_cor', anotacoesColor);
-			formData.set('resumo_cor', resumoColor);
-			formData.set('fundo_cor', fundoColor);
-		}
-
-		try {
-			const response = await fetch('/api/folhas/criar', {
-				method: 'POST',
-				body: formData,
-			});
-
-			if (response.ok) {
-				router.push('/dashboard');
-			} else {
-				const data = await response.json();
-				setError(data.error || 'Erro ao criar folha');
-			}
-		} catch (error) {
-			console.error('Erro ao criar folha:', error);
-			setError('Erro ao criar folha. Tente novamente mais tarde.');
-		}
 	};
 
 	if (isLoading) {
@@ -185,7 +118,7 @@ export default function NovaFolhaPage() {
 				</Link>
 			</div>
 
-			<form onSubmit={handleSubmit}>
+			<form action={formAction}>
 				<Card
 					style={{
 						backgroundColor: isPremium ? fundoColor : undefined,
@@ -402,7 +335,9 @@ export default function NovaFolhaPage() {
 						<Link href='/dashboard'>
 							<Button variant='outline'>Cancelar</Button>
 						</Link>
-						<Button type='submit'>Salvar Anotação</Button>
+						<Button type='submit' disabled={isPending} isLoading={isPending}>
+							Salvar Anotação
+						</Button>
 					</CardFooter>
 				</Card>
 			</form>

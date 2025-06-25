@@ -6,7 +6,7 @@ import { UserData } from '@/app/types/User';
 import { cookies } from 'next/headers';
 import { FormState } from '@/app/types/FormState';
 
-interface RegisterResponse {
+export interface UserResponse {
 	user: UserData;
 }
 
@@ -50,7 +50,7 @@ export async function register(
 	try {
 		const response = await request<
 			{ nome: string; email: string; senha: string },
-			RegisterResponse
+			UserResponse
 		>({
 			method: 'POST',
 			endpoint: '/user',

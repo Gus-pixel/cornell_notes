@@ -25,14 +25,15 @@ import {
 } from '@/components/ui/alert-dialog';
 import Loading from '@/components/Loading';
 import { UserData } from '@/app/types/User';
+import { useAuth } from '@/app/context/AuthContext';
 
 export default function FolhaPage({ params }: { params: { id: string } }) {
 	const router = useRouter();
 	const [folha, setFolha] = useState<FolhaCornell | null>(null);
-	const [user, setUser] = useState<UserData | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const { user } = useAuth();
 
 	useEffect(() => {
 		// Redirecionar para a página de criação se o ID for "nova"
@@ -43,22 +44,6 @@ export default function FolhaPage({ params }: { params: { id: string } }) {
 
 		const fetchData = async () => {
 			try {
-				// Buscar informações do usuário
-				// const userResponse = await fetch('/api/user');
-				// const userData = await userResponse.json();
-				// setUser(userData);
-
-				//TODO : Simular carregamento de usuário
-				await new Promise((resolve) => setTimeout(resolve, 1000)); // Simula atraso de 1 segundo
-				setUser({
-					id: '1',
-					nome: 'João Silva',
-					email: 'jaoao@silve.ocom',
-					tipo: 'premium', // ou 'gratuito'
-					createdAt: new Date().toISOString(),
-					updatedAt: new Date().toISOString(),
-				} as UserData);
-
 				// Buscar folha específica
 				// const folhaResponse = await fetch(`/api/folhas/${params.id}`);
 				// if (!folhaResponse.ok) {
